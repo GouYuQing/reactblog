@@ -6,8 +6,10 @@ import 'highlight.js/styles/monokai-sublime.css';
 import '../static/css/AddArticle.css';
 
 import {Row,Col,Input,Select,Button,DatePicker,message} from 'antd';
+
 import axios from 'axios';
 import servicePath from '../config/apiURL';
+import Item from 'antd/lib/list/Item';
 
 const {Option} = Select;
 const {TextArea} = Input;
@@ -22,10 +24,10 @@ function AddArticle(props){
     const [showDate,setShowDate] = useState();
     const [updateDate,setUpdateDate] = useState();
     const [typeInfo ,setTypeInfo] = useState([]);
-    const [selectedType,setSelectType] = useState(1);
-useEffect(()=>{
+    const [selectedType,setSelectType] = useState('请选择');
+    useEffect(()=>{
     getTypeInfo()
-},[]);
+    },[]);
     // const renderer = new marked.Renderer();
     marked.setOptions({
         renderer:new marked.Renderer(),
@@ -60,27 +62,25 @@ useEffect(()=>{
             res=>{
                 if(res.data.data=="没有登录"){
                     localStorage.removeItem('openId');
-                    props.history.push('/index');
+                    props.history.push('/login');
                 }else{
                     setTypeInfo(res.data.data);
                 }
             }
         )
     };
-    const selectTypeHander=(value)=>{
+    const selectTypeHandler=(value)=>{
         setSelectType(value)
     };
    //保存文章的方法
-const saveArticle = ()=>{
-
-    // markedContent()  //先进行转换
-
-
-    if(!selectedType){
-        message.error('必须选择文章类别')
-        return false
-    }else if(!articleTitle){
+const saveArticle =()=>{
+  
+     if(!articleTitle){
         message.error('文章名称不能为空')
+        return false
+    }else if(!selectedType){
+        message.error('选择类型不能为空')
+        console.log(selectedType)
         return false
     }else if(!articleContent){
         message.error('文章内容不能为空')
@@ -94,33 +94,48 @@ const saveArticle = ()=>{
     }
 
     let dataProps={}   //传递到接口的参数
-    dataProps.type_id = selectedType 
     dataProps.title = articleTitle
+    dataProps.type_id = selectedType 
     dataProps.article_content =articleContent
     dataProps.introduce =introducemd
     let datetext= showDate.replace('-','/') //把字符串转换成时间戳
     dataProps.addTime =(new Date(datetext).getTime())/1000
-
-
     if(articleId==0){
-        console.log('articleId=:'+articleId)
-        dataProps.view_count =Math.ceil(Math.random()*100)+1000
+        dataProps.id = articleId
+        dataProps.view_count = 0;
         axios({
             method:'post',
             url:servicePath.addArticle,
             data:dataProps,
-            withCredentials: true
+            header:{'Access-Control-Allow-Origin':'*'},
+            withCredentials:true
         }).then(
             res=>{
+                // console.log('测试')
                 setArticleId(res.data.insertId)
-                if(res.data.isScuccess){
-                    message.success('文章保存成功')
+                if(res.data.isSuccess){
+                    message.success('文章添加成功')
                 }else{
-                    message.error('文章保存失败');
+                    message.error('文章添加失败');
                 }
 
             }
         )
+    }else{
+        dataProps.id = articleId
+        axios({
+            method:'post',
+            url:servicePath.updateArticle,
+            data:dataProps,
+            withCredentials:true
+        }).then(res=>{
+            if(res.data.isSuccess){
+                message.success('文章修改成功')
+            }else{
+                message.error('文章修改失败')
+
+            }
+        })
     }
  } 
     return(
@@ -128,7 +143,7 @@ const saveArticle = ()=>{
             <Row gutter={5}>
                 <Col span={18}>
                     <Row gutter={10}>
-                        <Col span={20}>
+                        <Col span={16}>
                             <Input  
                             value={articleTitle} 
                             placeholder="请输入标题" 
@@ -136,13 +151,13 @@ const saveArticle = ()=>{
                             onChange={e=>{setArticleTitle(e.target.value)}}/>
                         </Col>
                         <Col span={4}>
-                            <Select defaultValue={selectedType} size="large" onChange={selectTypeHander}>
-                                {
-                                    typeInfo.map((item,index)=>{
-                                    return(<Option key={index} value={item.Id}>{item.typeName}</Option>)
-                                    })
-                                }
-                            </Select>
+                          <Select defaultValue={selectedType} size='large' onChange={selectTypeHandler}>
+                              {
+                                  typeInfo.map((item,index)=>{
+                                  return (<Option key={index} value={item.id}>{item.typeName}</Option>)
+                                  })
+                              }
+                          </Select>
                         </Col>
 
                     </Row>
@@ -183,7 +198,7 @@ const saveArticle = ()=>{
                         <Col span={12}>
                             <div className="date-select"> 
                             <DatePicker
-                                onChange={(date,dateString)=>{setShowDate(dateString)}}
+                                onChange={(date,dateString)=>setShowDate(dateString)}
                                 placeholder="发布日期"
                                 size="large"
                             />

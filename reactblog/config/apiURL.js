@@ -1,4 +1,4 @@
-let apiURL = 'http://127.0.0.1:7002/default/'
+let apiURL = 'http://127.0.0.1:7001/default/'
 let servicePath = {
     getArticleList:apiURL+'getArticleList',//首页接口
 

@@ -6,6 +6,9 @@ let servicePath = {
 
     getTypeInfo:apiURL+'getTypeInfo',//菜单接口
 
-    getListById:apiURL+'getListById/'//根据类别id获得文章列表
+    getListById:apiURL+'getListById/',//根据类别id获得文章列表
+
+    delArticle:apiURL+'delArticle',//删除文章
+
 }
 export default servicePath;

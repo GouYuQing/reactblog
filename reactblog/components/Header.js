@@ -41,9 +41,9 @@ const Header=()=>{
         <Col xs={24} sm={24} md={10} lg={15} xl={12}>
             <span className="hreader-logo">
             <Link href={{pathname:'/index'}}>
-                <a> 晴啊晴</a>
+                <a> 阿晴啊阿晴</a>
             </Link> </span>
-            <span className="header-txt">学习react</span>
+            <span className="header-txt">博客-我的学习过程</span>
         </Col>
         <Col xs={0} sm={0} md={14} lg={8} xl={6}>
             <Menu mode="horizontal" onClick={handClick}>
@@ -55,7 +55,7 @@ const Header=()=>{
                    navArray.map((item)=>{
                        return(
                            <Menu.Item key={item.id}  >
-                               <Icon type={item.icon}/>
+                               {/* <Icon type={item.icon}/> */}
                                {item.typeName}
                            </Menu.Item>
                        )

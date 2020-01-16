@@ -402,4 +402,42 @@ module.exports = options =>{
 ```js
  var adminauth = app.middleware.adminauth()
 ```
+#### CRUD
 
+得到文章信息的方法：getTypeInfo（） //从中台得到文章类别信息
+
+保存文章的方法：saveArticle（）
+
+添加文章的方法：addArticle()
+
+修改文章的方法：updateArticle（）
+
+得到文章列表展示页面：ArticleList
+
+得到文章列表的方法：getArticleList（）
+
+删除文章的方法：delArticle()
+
+写增删查的方法：先去中台编写方法，然后写路由，然后在后台得到数据并进行操作
+
+#### 部署到服务器
+
+使用PM2守护，在Linux中安装node，npm，pm2
+
+进入前端文件夹
+
+```shell
+pm2 start npm -- run start//启动
+```
+
+中台启动
+
+```shell
+npm run start
+```
+
+后台启动
+
+先打包成静态页面`npm run build`
+
+然后放到服务器中

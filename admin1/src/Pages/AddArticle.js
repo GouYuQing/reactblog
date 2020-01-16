@@ -9,7 +9,6 @@ import {Row,Col,Input,Select,Button,DatePicker,message} from 'antd';
 
 import axios from 'axios';
 import servicePath from '../config/apiURL';
-import Item from 'antd/lib/list/Item';
 
 const {Option} = Select;
 const {TextArea} = Input;
@@ -26,7 +25,12 @@ function AddArticle(props){
     const [typeInfo ,setTypeInfo] = useState([]);
     const [selectedType,setSelectType] = useState('请选择');
     useEffect(()=>{
-    getTypeInfo()
+        getTypeInfo()
+        let tempId = props.match.params.id
+        if(tempId){
+            setArticleId(tempId)
+            getArticleById(tempId)
+        }
     },[]);
     // const renderer = new marked.Renderer();
     marked.setOptions({
@@ -138,6 +142,27 @@ const saveArticle =()=>{
         })
     }
  } 
+ //将文章内容从后台调出来
+ const getArticleById=(id)=>{
+     axios(servicePath.getArticleById+id,{
+         withCredentials:true,
+         header:{ 'Access-Control-Allow-Origin':'*' }
+     }).then(
+         res=>{
+             let articleInfo=res.data.data[0]
+             setArticleTitle(articleInfo.title)
+             setMarkdownContent(articleInfo.article_content)
+             let html = marked(articleInfo.article_content)
+             setMarkdownContent(html)
+             setIntroducemd(articleInfo.introduce)
+             let tempInt = marked(articleInfo.introduce)
+             setIntroducehtml(tempInt)
+             setShowDate(articleInfo.addTime)
+             setSelectType(articleInfo.type_id)
+         }
+     )
+
+ }
     return(
         <div>
             <Row gutter={5}>
@@ -168,6 +193,7 @@ const saveArticle =()=>{
                         className="markdown-content" 
                         rows={35}  
                         placeholder="请输入文章内容"
+                        value={articleContent}
                         onChange={changeContent}
                         />
                 </Col>
@@ -179,9 +205,9 @@ const saveArticle =()=>{
                 </Col>
                 <Col span={6}>
                     <Row>
-                        <Col span={12}>
+                        {/* <Col span={12}>
                             <Button size="large">暂存文章</Button>
-                            </Col>
+                            </Col> */}
                             <Col span={12}>
                             <Button size="large" type="primary" onClick={saveArticle}>发布文章</Button>
                             </Col>                       
@@ -191,6 +217,7 @@ const saveArticle =()=>{
                                 rows={4}
                                 placeholder="请输入文章简介"
                                 onChange={changeIntroduce}
+                                value={introducemd}
                             ></TextArea>
                             <br/><br/>
                             <div className="introduce-html" dangerouslySetInnerHTML={{__html:introducehtml}}></div>

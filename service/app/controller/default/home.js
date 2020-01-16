@@ -10,7 +10,7 @@ class HomeController extends Controller {
     const sql = 'SELECT article.id as id,' +
       'article.title as title,' +
       'article.introduce as introduce,' +
-      'article.addTime as addTime,' +
+      'FROM_UNIXTIME(article.addTime,"%Y-%m-%d %H:%i:%s") as addTime,' +
       'article.view_count as view_count ,' +
       'type.typeName as typeName ' +
       'FROM article LEFT JOIN type ON article.type_id = type.Id';
@@ -27,7 +27,7 @@ class HomeController extends Controller {
       'article.title as title,' +
       'article.introduce as introduce,' +
       'article.article_content as article_content,' +
-      'article.addTime as addTime,' +
+      'FROM_UNIXTIME(article.addTime,"%Y-%m-%d %H:%i:%s")  as addTime,' +
       'article.view_count as view_count ,' +
       'type.typeName as typeName ,' +
       'type.id as typeId ' +
@@ -49,7 +49,7 @@ class HomeController extends Controller {
     const sql = 'SELECT article.id as id,' +
       'article.title as title,' +
       'article.introduce as introduce,' +
-      'article.addTime as addTime,' +
+      'FROM_UNIXTIME(article.addTime,"%Y-%m-%d %H:%i:%s")  as addTime,' +
       'article.view_count as view_count ,' +
       'type.typeName as typeName ' +
       'FROM article LEFT JOIN type ON article.type_id = type.Id ' +

@@ -8,6 +8,13 @@ let servicePath = {
     
     updateArticle:apiURL+'updateArticle',//修改文章
 
+    getArticleList:apiURL+'getArticleList',//后台展示文章列表
+    
+    delArticle:apiURL + 'delArticle/' ,  //  删除文章
+
+    getArticleById:apiURL + 'getArticleById/' ,  // 更具id获得文章
+
+
 
 
 }

@@ -34,7 +34,7 @@ const MyList = (list) => {
   }); 
   const [mylist,setMylist]=useState(list.data);
   // setMylist(list.data);
-
+  
   return(
   <div>
     <Head>

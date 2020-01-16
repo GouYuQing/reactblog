@@ -52,20 +52,19 @@ renderer.heading = function(text,level,raw){
         <Breadcrumb>
           <Breadcrumb.Item><a href="/">首页</a></Breadcrumb.Item>
           <Breadcrumb.Item>文章列表</Breadcrumb.Item>
-          <Breadcrumb.Item>该文章名字</Breadcrumb.Item>          
+          <Breadcrumb.Item>{props.typeName}</Breadcrumb.Item>          
         </Breadcrumb>
       </div>
       <div>
         <div className="detailed-title">
-          此文章标题
+          {props.title}
         </div>
         <div className="list-icon center">
-          <span><Icon type="calendar"/> 2019-12-22 </span>
-          <span><Icon type="folder"/> 文章列表 </span>
-          <span><Icon type="fire"/> 100 </span>
+          <span><Icon type="calendar"/> {props.addTime} </span>
+          <span><Icon type="folder"/> {props.typeName} </span>
+          <span><Icon type="fire"/> {props.view_count} </span>
         </div>
         <div className="detailed-content">
-          正文，使用markdown
           <div className="dateiled-content"
           dangerouslySetInnerHTML={{__html:html}}
           >   
